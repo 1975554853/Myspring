@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>login</title>
+</head>
+<body>
+<h2>用户登录</h2>
+<div style="margin:20px 0;"></div>
+<div class="easyui-panel" title="New Topic" style="width:400px">
+    <div style="padding:10px 60px 20px 60px">
+        <form id="ff">
+            <table cellpadding="5">
+                <tr>
+                    <td>用户名:</td>
+                    <td><input class="easyui-textbox" type="text" id="userName" name="name" data-options="required:true"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>密码:</td>
+                    <td><input class="easyui-textbox" type="password" id="passWord" name="pass" data-options="required:true,validType:'text'"/>
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <div style="text-align:center;padding:5px">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">提交</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">清空</a>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" type="text/css" href="js/easyui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="js/easyui/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="js/easyui/demo/demo.css">
+<script type="text/javascript" src="js/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="js/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="js/we.js"></script>
+
+<script>
+    function submitForm() {
+        if($("#ff").form("validate")) {
+            // 获得表单数据
+            var userName = $("#userName").val();
+            var passWord = $("#passWord").val();
+
+            console.log(userName,passWord);
+            $.ajax({
+                type : "post",
+                url : "http://localhost:8080/toLog/login",
+                dataType : "json",
+                data : {
+                    userName : userName,
+                    passWord : passWord
+                },
+                success : function(res){
+                    console.log(res);
+                    if(res.code == 666){
+                        console.log(res.data);
+                        window.localStorage.setItem("modules" , JSON.stringify(res.data));
+                        // window.location.href = "index.html";
+                    }
+                }
+            });
+
+            $('#ff').form('submit');
+        }
+    }
+    function clearForm() {
+        $('#ff').form('clear');
+    }
+</script>
+
+</body>
+</html>
