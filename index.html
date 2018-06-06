@@ -16,7 +16,7 @@
 </head>
 <body>
 <div style="margin:20px 0;"></div>
-<div class="easyui-layout" style="width:1400px;height:700px;">
+<div class="easyui-layout" style="width:100%;height:700px;">
     <div data-options="region:'north'" style="height:50px"></div>
     <div data-options="region:'south',split:true" style="height:50px;"></div>
     <div data-options="region:'east',split:true" title="East" style="width:100px;"></div>
@@ -33,8 +33,21 @@
 
 <script src="js/we.js"></script>
 <script>
-    var modules = JSON.parse(window.localStorage.getItem("modules"));
-    console.log(modules);
+
+    $.ajax({
+        type : "post",
+        dataType : "json",
+        url : "http://localhost:8080/toLog/index",
+        data : {
+            token : crm.getToken()
+        },
+        success : function(res){
+            console.log(res);
+            if(res.code == 666){
+                $.fn.zTree.init($("#permission"),setting,res.data);
+            }
+        }
+    });
 
     var setting = {
 
@@ -67,8 +80,6 @@
                 $('#tt').tabs('add',{
                     title:treeNode.name,
                     closable:true,
-                    width:300,
-                    height:300,
                     content:'<iframe scrolling="auto" frameborder="5px"  src="'+treeNode.path+'" style="width:100%;height:100%;"></iframe>',
                     tools:[{
                         iconCls:'icon-mini-refresh',
@@ -83,22 +94,8 @@
         }
     };
 
-    $.fn.zTree.init($("#permission"),setting,modules);
 
-    function showTree(obj) {
-        if(!Array.isArray(obj) || obj.length <= 0){
-            return "";
-        }
-        var ul = $("<ul>");
-        for(var j in obj){
-            var li = "<li><a href='"+obj[j].moduleurl+"'>"+obj[j].modulename+"</a></li>";
-            ul.append(li);
-            if(obj[j].childrens.length > 0){
-               ul.append( showTree(obj[j].childrens));
-            }
-        }
-        return ul;
-    }
+
 </script>
 </body>
 </html>
