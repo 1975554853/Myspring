@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加</title>
+</head>
+<body>
+角色名:<input type="text" id="name"/>
+int0:<input type="text" />
+string0:<input type="text" />
+<script src="../js/jQuery-3.2.1.js"/>
+<script>
+    $("#name").blur(function () {
+        $.ajax({
+            type:"get",
+            url:"http://localhost:8080/jdgl/selectName",
+            data:{
+                name:$("#name").val()
+            },
+            dataType:"json",
+            success:function (res) {
+                if(!res){
+
+                }
+
+            }
+        })
+    })
+</script>
+</body>
+</html>
