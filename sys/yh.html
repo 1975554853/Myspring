@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>角色管理</title>
+
+    <!--主页面css-->
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .box2 {
+            width: 100%;
+            height: 500px;
+            border: 2px dashed #72b1ff;
+            margin: auto;
+            position: relative;
+            top: 0px;
+            z-index: 0;
+        }
+
+        .box3 {
+            width: 100%;
+            border: 1px dashed #0ad4ff;
+            margin: auto;
+        }
+
+        .box3 #tab {
+            width: 100%;
+        }
+
+        #tab thead tr th {
+            border: inset #c6c6c6 1px;
+            background: #78fff0;
+            line-height: 30px;
+        }
+
+        .td {
+            text-align: center;
+            border: inset #c6c6c6 1px;
+            line-height: 60px;
+        }
+
+        .tr {
+            text-align: center;
+            border: inset #c6c6c6 1px;
+            line-height: 30px;
+        }
+    </style>
+
+    <link rel="stylesheet" type="text/css" href="../js/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../js/easyui/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../js/easyui/demo/demo.css">
+    <script type="text/javascript" src="../js/easyui/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+    <script src="../js/we.js"></script>
+
+    <!--编辑用户信息页面css-->
+    <style>
+        .box21 {
+            width: 100%;
+            height: 510px;
+            background: rgba(210, 209, 209, 0.6);
+            margin: 20px auto;
+            position: absolute;
+            top: 0px;
+            z-index: 10;
+            display: none;
+        }
+
+        .box22 {
+            width: 400px;
+            height: 250px;
+            background: #ffffff;
+            margin: 100px auto;
+        }
+
+    </style>
+
+    <!--添加用户信息页面css-->
+    <style>
+        .box32 {
+            width: 400px;
+            height: 300px;
+            background: #ffffff;
+            margin: 100px auto;
+        }
+
+    </style>
+
+    <!--角色设置页面css-->
+    <style>
+        .box42 {
+            width: 500px;
+            height: 400px;
+            background: #ffffff;
+            margin: 20px auto;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<!--主页面-->
+<div class="box2">
+    <div class="box1">
+        <div class="easyui-panel" title="条件检索用户信息" style="width:100%">
+            <div style="padding:10px 60px 20px 60px">
+                <form id="ff" method="post">
+                    <table cellpadding="5">
+                        <tr>
+                            <td>用户名:</td>
+                            <td><input class="easyui-textbox" style="width: 100px;" type="text" name="name"
+                                       id="loginname"></input>
+                            </td>
+                            <td>是否锁定:</td>
+                            <td>
+                                <select class="easyui-combobox" style="width: 50px;" name="islockout" id="islockout">
+                                    <option value="否">否</option>
+                                    <option value="是">是</option>
+                                </select>
+                            </td>
+                            <td>创建起止时间:</td>
+                            <td>
+                                <input class="easyui-datebox" data-options="sharedCalendar:'#cc'" id="starttime">
+                            </td>
+                            <td>创建结束时间:</td>
+                            <td>
+                                <input class="easyui-datebox" data-options="sharedCalendar:'#cc'" id="endtime">
+                            </td>
+                            <div id="cc" class="easyui-calendar"></div>
+                            <td>排序:</td>
+                            <td>
+                                <select class="easyui-combobox" style="width: 120px;" name="sort" id="sort">
+                                    <option value="创建时间">创建时间</option>
+                                    <option value="最后登录时间">最后登录时间</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="button" class="easyui-linkbutton" style="height: 30px;width: 50px;"
+                                       onclick="selectUsersCondition()" value="检索"/>
+                            </td>
+                            <td>
+                                <input type="button" class="easyui-linkbutton"
+                                       style="height: 30px; width: 100px; margin-left: 100px;"
+                                       onclick="insertUsers()" value="添加用户"/>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="box3" id="box3">
+        <table id="tab">
+            <thead>
+            <tr>
+                <th width="5%">登录名</th>
+                <th width="5%">是否锁定</th>
+                <th width="10%">最后一次登录时间</th>
+                <th width="10%">密码错误次数</th>
+                <th width="10%">被锁定时间</th>
+                <th width="10%">密保邮箱</th>
+                <th width="10%">密保手机号</th>
+                <th width="10%">账户创立时间</th>
+                <th width="5%">操作</th>
+                <th width="5%">操作</th>
+                <th width="5%">操作</th>
+                <th width="5%">操作</th>
+                <th width="5%">操作</th>
+                <th width="5%">操作</th>
+            </tr>
+            </thead>
+            <tbody id="tbo1">
+
+            </tbody>
+        </table>
+        <div id="aa">
+            <div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--编辑用户信息页面-->
+<div class="box21" id="box21">
+    <div class="box22">
+        <div class="easyui-panel" title="修改用户信息" style="width:100%; height: 100%;">
+            <div style="padding:10px 60px 20px 60px">
+                <form id="ff1" class="easyui-form" method="post" data-options="novalidate:true">
+                    <table cellpadding="5">
+                        <tr>
+                            <td>登录名:</td>
+                            <td><input style="width: 200px; height: 30px;" type="text" id="aloginname"
+                                       data-options="required:true" disabled/></td>
+                        </tr>
+                        <tr>
+                            <td>邮箱:</td>
+                            <td><input style="width: 200px; height: 30px;" type="text" id="aprotectemail"
+                                       data-options="required:true,validType:'email'"/></td>
+                        </tr>
+                        <tr>
+                            <td>电话:</td>
+                            <td><input style="width: 200px; height: 30px;" type="text" id="aprotectmtel"
+                                       data-options="required:true"/></td>
+                        </tr>
+                    </table>
+                </form>
+                <div style="text-align:center;padding:5px">
+                    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">修改</a>
+                    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">取消</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!--添加用户信息页面-->
+<div class="box21" id="box31">
+    <div class="box32">
+        <div class="easyui-panel" title="添加用户" style="width:100%; height: 100%;">
+            <div style="padding:10px 60px 20px 60px">
+                <form id="ff2" class="easyui-form" method="post" data-options="novalidate:true">
+                    <table cellpadding="5">
+                        <tr>
+                            <td>登录名:</td>
+                            <td><input class="easyui-textbox" style="width: 200px;" type="text" id="bloginname"
+                                       data-options="required:true"/></td>
+                        </tr>
+                        <tr>
+                            <td>密码:</td>
+                            <td><input class="easyui-textbox" style="width: 200px;" type="text" id="bpassword"
+                                       data-options="required:true"/></td>
+                        </tr>
+                        <tr>
+                            <td>邮箱:</td>
+                            <td><input class="easyui-textbox" style="width: 200px; " type="text" id="bprotectemail"
+                                       data-options="required:true"/></td>
+                        </tr>
+                        <tr>
+                            <td>电话:</td>
+                            <td><input class="easyui-textbox" style="width: 200px;" type="text" id="bprotectmtel"
+                                       data-options="required:true"/></td>
+                        </tr>
+                    </table>
+                </form>
+                <div style="text-align:center;padding:5px">
+                    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="bsubmitForm()">添加</a>
+                    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="bclearForm()">取消</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!--角色设置页面-->
+<div class="box21" id="box41">
+    <div class="box42">
+        <div class="easyui-panel" title="角色设置" style="width:100%; height: 100%;">
+            <div style="padding:10px 60px 20px 60px;">
+                <div style="float: left">
+                    <div id="p1" style="width: 150px; height:300px;" class="easyui-panel" title="所有角色">
+                        <table id="rolestable"></table>
+                    </div>
+                </div>
+                <div style="float:right">
+                    <div id="p2" style="float: left;width: 150px; height:300px;" class="easyui-panel" title="用户所拥有的角色">
+                        <table id="userrolestable"></table>
+                    </div>
+                </div>
+                <div style="text-align:center;padding:5px">
+                    <br><br><br><br>
+                    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="uprole()">添加</a><br><br><br><br>
+                    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="downrole()">移除</a><br><br><br><br>
+                    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="cclearForm()">返回</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!--主页面js-->
+<script>
+    var page = 1;
+    var limit = 5;
+    var ye = 0;
+    var arrs = null;
+    var size = 0;
+    var loginname = null;
+    var islockout = null;
+    var starttime = null;
+    var endtime = null;
+    var sort = null;
+
+    //换时间样式
+    function times(time) {
+        if (time == "") {
+            return null;
+        }
+        var newtime;
+        var times = time.split("/");
+        newtime = times[2] + "-" + times[0] + "-" + times[1];
+        return newtime;
+    };
+
+    //检索
+    function selectUsersCondition() {
+        if ($("#loginname").val() != "") {
+            loginname = $("#loginname").val();
+        } else {
+            loginname = null;
+        }
+        islockout = $("#islockout").val();
+        starttime = times($("#starttime").val());
+        endtime = times($("#endtime").val());
+        sort = $("#sort").val();
+        page = 1;
+        shua();
+    }
+
+    //的数据
+    function shua() {
+        $.ajax({
+            type: "get",
+            url: "http://localhost:8080/yh/selectUsersCondition",
+            data: "TOKEN=" + crm.getToken() + "&loginname=" + loginname + "&islockout=" + islockout + "&starttime=" + starttime + "&endtime=" + endtime + "&sort=" + sort + "&page=" + page + "&limit=" + limit,
+            datetypr: "json",
+            success: function (res) {
+                res = JSON.parse(res);
+                arrs = res.data;
+                size = res.count;
+                ye = Math.ceil(size / limit);
+                if (res.code == 100) {
+                    jiazai();
+                } else {
+                    alert("系统故障！");
+                }
+            }
+        });
+    };
+
+    //加载到页面
+    function jiazai() {
+        $("#tbo1").html("");
+        $("#aa").html("");
+        for (var j = 0; j < arrs.length; j++) {
+            var arr = arrs[j];
+            var otr = $("<tr>").appendTo("#tab");
+            $("<td>", {
+                text: arr.loginname,
+                "class": "td"
+            }).appendTo(otr);
+            $("<td>", {
+                text: arr.islockout,
+                "class": "tr"
+            }).appendTo(otr);
+            $("<td>", {
+                text: arr.lastlogintime,
+                "class": "tr"
+            }).appendTo(otr);
+            $("<td>", {
+                text: arr.psdwrongtime,
+                "class": "tr"
+            }).appendTo(otr);
+            $("<td>", {
+                text: arr.locktime,
+                "class": "tr"
+            }).appendTo(otr);
+            $("<td>", {
+                text: arr.protectemail,
+                "class": "tr"
+            }).appendTo(otr);
+            $("<td>", {
+                text: arr.protectmtel,
+                "class": "tr"
+            }).appendTo(otr);
+            $("<td>", {
+                text: arr.createtime,
+                "class": "tr"
+            }).appendTo(otr);
+            var otd1 = $("<td>", {
+                "class": "tr"
+            }).appendTo(otr);
+            $("<a>", {
+                href: "#",
+                onclick: "lockingUsers(this)",
+                text: "锁定",
+            }).appendTo(otd1);
+            var otd2 = $("<td>", {
+                "class": "tr"
+            }).appendTo(otr);
+            $("<a>", {
+                href: "#",
+                onclick: "unlockingUsers(this);",
+                text: "解锁",
+            }).appendTo(otd2);
+            var otd3 = $("<td>", {
+                "class": "tr"
+            }).appendTo(otr);
+            $("<a>", {
+                href: "#",
+                onclick: "updateUsersPassword(this);",
+                text: "重置密码",
+            }).appendTo(otd3);
+            var otd4 = $("<td>", {
+                "class": "tr"
+            }).appendTo(otr);
+            $("<a>", {
+                href: "#",
+                onclick: "roleSettings(this);",
+                text: "角色设置",
+            }).appendTo(otd4);
+            var otd5 = $("<td>", {
+                "class": "tr"
+            }).appendTo(otr);
+            $("<a>", {
+                href: "#",
+                onclick: "updateUsers(this);",
+                text: "编辑用户",
+            }).appendTo(otd5);
+            var otd6 = $("<td>", {
+                "class": "tr"
+            }).appendTo(otr);
+            $("<a>", {
+                href: "#",
+                onclick: "deleteUsersLoginname(this);",
+                text: "删除用户",
+            }).appendTo(otd6);
+        }
+        $("<a>", {
+            href: "#",
+            "style": "float:left; margin-left: 20px;",
+            onclick: "up();",
+            text: "上一页",
+        }).appendTo("#aa");
+        $("<a>", {
+            href: "#",
+            "style": "float:left; margin-left: 20px;",
+            onclick: "dow();",
+            text: "下一页",
+        }).appendTo("#aa");
+        $("<p>", {
+            href: "#",
+            "style": "float:left; margin-left: 20px;",
+            text: "当前第" + page + "页，共" + ye + "页,共" + size + "条邮件",
+        }).appendTo("#aa");
+    };
+
+    //上一页
+    function up() {
+        if (page <= 1) {
+            alert("当前已是第一页");
+        } else {
+            $("#tbo1").html("");
+            $("#aa").html("");
+            page--;
+            shua();
+        }
+    };
+
+    //下一页
+    function dow() {
+        if (page >= ye) {
+            alert("当前已是尾页");
+        } else {
+            $("#tbo1").html("");
+            $("#aa").html("");
+            page++;
+            shua();
+        }
+    };
+
+
+    //----获取行号-----
+    function getRow(r) {
+        var i = r.parentNode.parentNode.rowIndex;
+        return i;
+    };
+
+    //锁定
+    function lockingUsers(r) {
+        var f = confirm("是否锁定！");
+        if (f) {
+            var p = getRow(r);
+            var p1 = document.getElementById('tab').rows[p].cells[0].innerText;
+            $.ajax({
+                type: "get",
+                url: "http://192.168.1.70:8080/yh/lockingUsers",
+                data: "TOKEN=" + crm.getToken() + "&loginname=" + p1,
+                success: function (del) {
+                    if (JSON.parse(del).code == "100") {
+                        alert("锁定成功！")
+                        shua();
+                    } else {
+                        alert("锁定失败！")
+                    }
+                }
+            });
+        }
+    }
+
+    //解锁
+    function unlockingUsers(r) {
+        var f = confirm("是否解锁！");
+        if (f) {
+            var p = getRow(r);
+            var p1 = document.getElementById('tab').rows[p].cells[0].innerText;
+            $.ajax({
+                type: "get",
+                url: "http://192.168.1.70:8080/yh/unlockingUsers",
+                data: "TOKEN=" + crm.getToken() + "&loginname=" + p1,
+                success: function (del) {
+                    if (JSON.parse(del).code == "100") {
+                        alert("解锁成功！")
+                        shua();
+                    } else {
+                        alert("解锁失败！")
+                    }
+                }
+            });
+        }
+    }
+
+    //重置密码
+    function updateUsersPassword(r) {
+        var f = confirm("是否重置密码！");
+        if (f) {
+            var p = getRow(r);
+            var p1 = document.getElementById('tab').rows[p].cells[0].innerText;
+            $.ajax({
+                type: "get",
+                url: "http://192.168.1.70:8080/yh/updateUsersPassword",
+                data: "TOKEN=" + crm.getToken() + "&loginname=" + p1,
+                success: function (del) {
+                    if (JSON.parse(del).code == "100") {
+                        alert("重置密码成功！")
+                        shua();
+                    } else {
+                        alert("重置密码失败！")
+                    }
+                }
+            });
+        }
+    }
+
+    var roleuser = "";
+
+    //角色设置
+    function roleSettings(r) {
+        var p = getRow(r);
+        roleuser = document.getElementById('tab').rows[p].cells[0].innerText;
+        roles();
+        userrole();
+        $("#box41")[0].style.display = "block";
+    };
+
+    <!--角色设置页面js-->
+    //查询所有角色
+    function roles() {
+        $("#rolestable").html("");
+        $.ajax({
+            type: "get",
+            url: "http://localhost:8080/yh/selectRoles",
+            data: "TOKEN=" + crm.getToken(),
+            datetypr: "json",
+            success: function (res) {
+                res = JSON.parse(res).data;
+                for (var i = 0; i < res.length; i++) {
+                    $("<a>", {
+                        href: "#",
+                        onclick: "getroles1(this);",
+                        style: "color:rgb(12, 12, 12)",
+                        text: res[i],
+                    }).appendTo("#rolestable");
+                    $("<br>").appendTo("#rolestable");
+                }
+            }
+        });
+    };
+    //查询用户拥有角色
+    function userrole() {
+        $("#userrolestable").html("");
+        $.ajax({
+            type: "get",
+            url: "http://localhost:8080/yh/selectUserRoles",
+            data: "TOKEN=" + crm.getToken() + "&loginname=" + roleuser,
+            datetypr: "json",
+            success: function (res) {
+                res = JSON.parse(res).data;
+                for (var i = 0; i < res.length; i++) {
+                    $("<a>", {
+                        href: "#",
+                        onclick: "getroles2(this);",
+                        style: "color:rgb(12, 12, 12)",
+                        text: res[i],
+                    }).appendTo("#userrolestable");
+                    $("<br>").appendTo("#userrolestable");
+                }
+            }
+        });
+    };
+    var role1 = "";
+    var role2 = "";
+    var color1 = "red";
+    var color2 = "red";
+    //得到角色名1
+    function getroles1(r) {
+        //变颜色
+        $(r)[0].style.color = color1;
+        if ($(r)[0].style.color == "red") {
+            role1 = $(r).html();
+            color1 = "rgb(12, 12, 12)";
+        } else {
+            role1 = ""
+            color1 = "red";
+        }
+    };
+    //得到角色名2
+    function getroles2(r) {
+        var col2 = $(r)[0].style.color;
+        $(r)[0].style.color = color2;
+        if ($(r)[0].style.color == "red") {
+            role2 = $(r).html();
+            color2 = "rgb(12, 12, 12)";
+        } else {
+            role2 = "";
+            color2="red"
+        }
+    };
+    function uprole() {
+        if (role1 == "") {
+            alert("请选择要添加的角色")
+            return;
+        }
+        $.ajax({
+            type: "get",
+            url: "http://localhost:8080/yh/insertUserRole",
+            data: "TOKEN=" + crm.getToken() + "&loginname=" + roleuser + "&rolename=" + role1,
+            datetypr: "json",
+            success: function (res) {
+                if (JSON.parse(res).code == 100) {
+                    alert(JSON.parse(res).msg)
+                    userrole();
+                } else {
+                    alert(JSON.parse(res).msg)
+                }
+                role1 = "";
+            }
+        });
+    };
+    function downrole() {
+        if (role2 == "") {
+            alert("请选择要移除的角色")
+            return;
+        }
+        $.ajax({
+            type: "get",
+            url: "http://localhost:8080/yh/deleteUserRole",
+            data: "TOKEN=" + crm.getToken() + "&loginname=" + roleuser + "&rolename=" + role2,
+            datetypr: "json",
+            success: function (res) {
+                if (JSON.parse(res).code == 100) {
+                    alert(JSON.parse(res).msg);
+                    userrole();
+                } else {
+                    alert(JSON.parse(res).msg)
+                }
+                role2 = "";
+            }
+        });
+    };
+    function cclearForm() {
+        $("#box41")[0].style.display = "none";
+    };
+
+    //编辑用户
+    var updatename;
+    var updateprotectemail;
+    var updateprotectmtel;
+
+    function updateUsers(r) {
+        var p = getRow(r);
+        updatename = document.getElementById('tab').rows[p].cells[0].innerText;
+        updateprotectemail = document.getElementById('tab').rows[p].cells[5].innerText;
+        updateprotectmtel = document.getElementById('tab').rows[p].cells[6].innerText;
+        $("#aloginname")[0].value = updatename;
+        $("#aprotectemail")[0].value = updateprotectemail;
+        $("#aprotectmtel")[0].value = updateprotectmtel;
+
+        $("#box21")[0].style.display = "block";
+    }
+
+    //添加用户
+    function insertUsers() {
+        $("#box31")[0].style.display = "block";
+    }
+
+    //----删除用户-----
+    function deleteUsersLoginname(r) {
+        var f = confirm("是否删除！");
+        if (f) {
+            var p = getRow(r);
+            var p1 = document.getElementById('tab').rows[p].cells[0].innerText;
+            $.ajax({
+                type: "get",
+                url: "http://192.168.1.70:8080/yh/deleteUsersLoginname",
+                data: "TOKEN=" + crm.getToken() + "&loginname=" + p1,
+                success: function (del) {
+                    if (JSON.parse(del).code == "100") {
+                        document.getElementById('tab').deleteRow(p);
+                        alert("删除成功！")
+                        shua();
+                    } else {
+                        alert("删除失败！")
+                    }
+                }
+            });
+        }
+    };
+
+
+</script>
+
+<!--编辑用户信息页面js-->
+<script>
+    function submitForm() {
+        if ($("#aprotectemail").val() == "") {
+            alert("邮箱不能为空");
+            return;
+        }
+        if ($("#aprotectmtel").val() == "") {
+            alert("电话不能为空");
+            return;
+        }
+        $.ajax({
+            type: "get",
+            url: "http://localhost:8080/yh/updateUsers",
+            data: "TOKEN=" + crm.getToken() + "&loginname=" + $("#aloginname").val() + "&protectemail=" + $("#aprotectemail").val() + "&protectmtel=" + $("#aprotectmtel").val(),
+            datetypr: "json",
+            success: function (res) {
+                if (JSON.parse(res).code == 100) {
+                    alert(JSON.parse(res).msg)
+                    $("#box21")[0].style.display = "none";
+                } else {
+                    alert(JSON.parse(res).msg)
+                }
+            }
+        });
+    }
+
+    function clearForm() {
+        $("#box21")[0].style.display = "none";
+    }
+
+</script>
+
+<!--添加用户信息页面js-->
+<script>
+    function bsubmitForm() {
+        if ($("#bloginname").val() == "") {
+            alert("登录名不能为空");
+            return;
+        }
+        if ($("#bpassword").val() == "") {
+            alert("密码不能为空");
+            return;
+        }
+        if ($("#bprotectemail").val() == "") {
+            alert("邮箱不能为空");
+            return;
+        }
+        if ($("#bprotectmtel").val() == "") {
+            alert("电话不能为空");
+            return;
+        }
+
+        $.ajax({
+            type: "get",
+            url: "http://localhost:8080/yh/insertUsers",
+            data: "TOKEN=" + crm.getToken() + "&loginname=" + $("#bloginname").val() + "&password=" + $("#bpassword").val() + "&protectemail=" + $("#aprotectemail").val() + "&protectmtel=" + $("#aprotectmtel").val(),
+            datetypr: "json",
+            success: function (res) {
+                if (JSON.parse(res).code == 100) {
+                    alert(JSON.parse(res).msg)
+                    $("#box31")[0].style.display = "none";
+                } else {
+                    alert(JSON.parse(res).msg)
+                }
+            }
+        });
+    }
+
+    function bclearForm() {
+        $("#box31")[0].style.display = "none";
+    }
+
+</script>
+
+
+</body>
+</html>
