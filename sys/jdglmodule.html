@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Nested Panel - jQuery EasyUI Demo</title>
+    <link rel="stylesheet" type="text/css" href="../js/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../js/easyui/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../js/easyui/demo/demo.css">
+    <script type="text/javascript" src="../js/easyui/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+</head>
+<body style="padding:50px auto">
+<div class="easyui-panel" title="Nested Panel" style="width:100%;height:300px;padding:10px">
+    <div class="easyui-layout" data-options="fit:true">
+        <div data-options="region:'west',split:true" style="width:200px;padding:10px">
+            <ul id="module" class="ztree"></ul>
+        </div>
+        <div data-options="region:'east'" style="width:200px;padding:10px">
+            <ul id="module1" class="ztree"></ul>
+        </div>
+        <div data-options="region:'center'" style="padding:10px">
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" id="tijiao">添加</button>
+                    <button type="reset" id="chongzhi">移除</button>
+                    <button type="reset" id="fanhui">返回</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        var setting = {
+
+            data: { //数据配置
+                key: {
+                    name: "name"
+                    // children: "childrens"
+                },
+                simpleData: { //简单数据模式
+                    enable: true, //是否启用简单数据模式
+                    // enable: false, //是否启用简单数据模式
+                    idKey: "id", //设置节点id属性名
+                    pIdKey: "parentid", //设置父节点属性名
+                    rootPId: 0 //设置根节点，默认值null
+                }
+            }
+
+        };
+        $.ajax({
+            type:"get",
+            url:"http://localhost:8080/module/selectModuleByNotRoleId",
+            data:{
+                "newname":value,
+                "oldname":data.name
+            },
+            dataType:"json",
+            success:function (res) {
+            }
+        });
+
+
+
+
+    })
+</script>
+<script>
+    $("#tijiao").click(function () {
+        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+        parent.layer.close(index); //再执行关闭
+    });
+    $("#chongzhi").click(function () {
+        window.location.href = "jdglpermission.html";
+    });
+    $("#fanhui").click(function () {
+        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+        parent.layer.close(index); //再执行关闭
+    })
+</script>
+
+</body>
+</html>

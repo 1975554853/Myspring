@@ -59,8 +59,8 @@
 
                     if(res.code == 666){
                         crm.setToken(res.data);
-                        // window.localStorage.setItem("modules" , JSON.stringify(res.data));
                          window.location.href = "index.html";
+                         return ;
                     }
 
                     var $item = $("#item");
