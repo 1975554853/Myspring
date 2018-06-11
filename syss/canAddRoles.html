@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>可添加的角色</title>
     <link rel="stylesheet" href="../js/layui/css/layui.css"  media="all">
+    <script type="text/javascript" src="../js/we.js"></script>
 </head>
 <body>
 <div class="layui-btn-group demoTable">
@@ -38,6 +39,22 @@
             var datas = obj.data;
             if(obj.event === 'edit'){
                 console.log(datas);
+                var selectUser = window.localStorage.getItem("SELECT_USER");
+                var namesId = [datas.id];
+                $.ajax({
+                    type : "post",
+                    url : "http://localhost:8080/modules/insertRoles",
+                    dataType : "json",
+                    data :{
+                        "selectUser" : selectUser,
+                        "namesId" : namesId,
+                        token : crm.getToken()
+                    },
+                    success : function(res){
+                        console.log(res);
+                        alert(res.msg);
+                    }
+                })
             }
         });
 
