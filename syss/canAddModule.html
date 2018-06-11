@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>可添加的模块</title>
+    <link rel="stylesheet" type="text/css" href="../js/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../js/easyui/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../js/easyui/demo/demo.css">
+    <script type="text/javascript" src="../js/easyui/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+</head>
+<body>
+
+<div id="aa" class="easyui-accordion" data-options="multiple:false" style="width:500px;height:500px;">
+
+</div>
+
+<script>
+    var inx ;
+
+    $.ajax({
+        type : "get",
+        url: "http://localhost:8080/modules/getRoleModule",
+        success : function (res) {
+            var ress = JSON.parse(res);
+            console.log(ress);
+            for (var j in ress){
+                addPanel(ress[j].name , ress[j].id);
+                var $now = $('#aa').accordion('getPanel',ress[j].name);
+                getChild(ress[j].id , $now , j);
+            }
+
+        }
+    });
+
+    //选中父类面板时触发
+    $('#aa').accordion({
+        onSelect:function(title, index){
+            console.log('选择了第'+(index+1)+'个面板'+title);
+            inx = index;
+            sub();
+        }
+    });
+
+    //添加父类模块面板
+    function addPanel(tit , fatherId){
+        $('#aa').accordion('add',{
+            title:tit,
+            selected: false,
+            content:'<input type="hidden" class="mychild" value="'+fatherId+'">'
+        });
+    }
+
+    //从后台得到子模块
+    function getChild(moduleId , obj , fromInx){
+        $.ajax({
+            type : "post",
+            url: "http://localhost:8080/modules/getChileModule",
+            dataType: "json",
+            data: {
+                "moduleId" : moduleId,
+                token : crm.getToken()
+            },
+            success : function(res){
+                // console.log("获取子模块",res);
+                var str = "";
+                for(var j in res){
+                    str +=addChild(res[j].name);
+                }
+                // console.log(str);
+                $(obj).html('<form class="modules'+fromInx+'">'+str+addSubBtn()+'</form>');
+            }
+        })
+    }
+
+    // $("from :submit").click(sub);
+
+    function sub(){
+        var temp = ".modules"+inx;
+        var $temp = $(temp);
+        $temp.find(":submit").click(function(){
+            var vals = $temp.find("input:checked");
+            var valArr = [];
+            for (var j=0;j<vals.length;j++){
+                valArr.push(vals[j].value);
+            }
+            var roleName = window.localStorage.getItem("ROLES_NAME");
+            valArr.push(roleName);
+            $.ajax({
+               type: "post",
+               url: "http://localhost:8080/modules/insertModules",
+               dataType: "json",
+               data: {
+                   "modval" : valArr,
+                   token : crm.getToken()
+               },
+                success :function (res) {
+                    console.log(res);
+                    alert(res.msg);
+                    location.reload();
+                }
+            });
+            return false;
+        });
+
+
+    }
+    //添加按钮
+    function addSubBtn() {
+        return '<input type="submit" value="提交"/>   <input type="reset" value="重置">';
+    }
+
+    //得到被选中的父模块
+    function getPp(){
+        return $('#aa').accordion('getSelected');
+    }
+
+    //添加子类模块选项
+    function addChild(val){
+        return '<label><input type="checkbox" value="'+val+'">'+val+'<br/></label>';
+    }
+</script>
+</body>
+</html>

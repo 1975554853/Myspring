@@ -16,5 +16,11 @@ const crm = {
     },
     getModules(){
         return window.localStorage.getItem("MODULES");
+    },
+    setSelectRoleName(obj){
+        window.localStorage.setItem("ROLES_NAME" , obj);
+    },
+    getSelectRoleId(){
+       return window.localStorage.getItem("ROLES_NAME");
     }
 }

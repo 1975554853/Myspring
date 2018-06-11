@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>可添加的角色</title>
+    <link rel="stylesheet" href="../js/layui/css/layui.css"  media="all">
+</head>
+<body>
+<div class="layui-btn-group demoTable">
+    <button class="layui-btn" data-type="getCheckData">添加选中行</button>
+</div>
+
+<table class="layui-table" lay-data="{url:'http://localhost:8080/jdgl/getRolesName', page:true, id:'idTest'}" lay-filter="demo">
+    <thead>
+    <tr>
+        <th lay-data="{type:'checkbox', fixed: 'left'}"></th>
+        <th lay-data="{field:'name', width:150, sort: true, fixed: true}">角色名</th>
+
+        <th lay-data="{fixed: 'right', width:178, align:'center', toolbar: '#barDemo'}"></th>
+    </tr>
+    </thead>
+</table>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">添加</a>
+</script>
+<script src="../js/layui/layui.js" charset="utf-8"></script>
+
+<script>
+    layui.use('table', function(){
+        var table = layui.table;
+        //监听表格复选框选择
+        table.on('checkbox(demo)', function(obj){
+            console.log(obj)
+        });
+        //监听工具条
+        table.on('tool(demo)', function(obj){
+            var datas = obj.data;
+            if(obj.event === 'edit'){
+                console.log(datas);
+            }
+        });
+
+        var $ = layui.$, active = {
+            getCheckData: function(){ //获取选中数据
+                var checkStatus = table.checkStatus('idTest')
+                    ,datas = checkStatus.data;
+                console.log(">>>>>>",datas);
+                // var names = [];
+                var namesId = [];
+                for (var j in datas){
+                    // console.log(data[j].name);
+                    // names.push(datas[j].name);
+                    namesId.push(datas[j].id);
+                }
+                // console.log(names);
+                console.log(namesId);
+                var selectUser = window.localStorage.getItem("SELECT_USER");
+                $.ajax({
+                    type : "post",
+                    url : "http://localhost:8080/modules/insertRoles",
+                    dataType : "json",
+                    data :{
+                        "selectUser" : selectUser,
+                        "namesId" : namesId,
+                        token : crm.getToken()
+                    },
+                    success : function(res){
+                        console.log(res);
+                        alert(res.msg);
+                    }
+                })
+            }
+        };
+
+        $('.demoTable .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+</script>
+</body>
+</html>
