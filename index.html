@@ -17,14 +17,21 @@
 <body>
 <div style="margin:20px 0;"></div>
 <div class="easyui-layout" style="width:100%;height:700px;">
-    <div data-options="region:'north'" style="height:50px"></div>
+    <div data-options="region:'north'" style="height:50px">
+        <div style="float:left; margin:5px 0px 0px 50px ;">
+            <h1>CRM系统管理平台</h1>
+        </div>
+
+        <div style="float: right; margin:10px 50px 0px 0px ;">
+            <input type="button" style="width: 50px; height: 30px;" value="注销" onclick="end()">
+        </div>
+    </div>
     <div data-options="region:'south',split:true" style="height:50px;"></div>
-    <div data-options="region:'east',split:true" title="East" style="width:100px;"></div>
-    <div data-options="region:'west',split:true" title="West" style="width:150px;">
-        <ul id="permission" class="ztree"></ul>
+    <div data-options="region:'west',split:true" title="模块" style="width:200px;">
+        <ul id="permission" class="ztree" style="width: 180px;"></ul>
     </div>
 
-    <div data-options="region:'center',title:'Main Title',iconCls:'icon-ok'">
+    <div data-options="region:'center',title:'详情',iconCls:'icon-ok'">
         <div id="tt" class="easyui-tabs" style="width:100%;height:100%;">
 
         </div>
@@ -33,6 +40,11 @@
 
 <script src="js/we.js"></script>
 <script>
+
+    //判断是否登录了
+    if(crm.getToken()==""){
+        window.location.href = "Login.html";
+    }
 
     $.ajax({
         type : "post",
@@ -94,6 +106,15 @@
             }
         }
     };
+
+    //注销事件
+    function end() {
+        crm.setUserId("");
+        crm.setModules("");
+        crm.setRoles("");
+        crm.setToken("")
+        window.location.href = "Login.html";
+    }
 
 
 
