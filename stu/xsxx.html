@@ -113,7 +113,7 @@
                 <th>课程方向</th>
                 <th>得分</th>
                 <th>是否缴费</th>
-                <th>咨询师备注</th>
+                <th>备注</th>
                 <th>操作</th>
                 <th>操作</th>
             </tr>
@@ -213,7 +213,7 @@
                 "class": "tr"
             }).appendTo(otr);
             $("<td>", {
-                text: arr.askercontent,
+                text: arr.content,
                 "class": "tr"
             }).appendTo(otr);
             var otd5 = $("<td>", {
@@ -469,6 +469,7 @@
                         text:arr[i]
                     }).appendTo("#newAskerId");
                 }
+                shua();
             }
         });
 
@@ -536,5 +537,6 @@
 
 
 </script>
+
 </body>
 </html>
