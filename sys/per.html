@@ -54,7 +54,7 @@
     <script src="../js/we.js"></script>
 </head>
 <body>
-
+<div><a href="http://localhost:8080/excel/download">导出表格</a></div>
 <div class="box2">
     <div class="box3" id="box3">
         <table id="tab">
@@ -91,7 +91,7 @@
         $.ajax({
             type: "get",
             url: "http://localhost:8080/system/update",
-            data: "TOKEN=" + crm.getToken(),
+            data:"",
             datetypr: "json",
             success: function (res) {
                 shua();
@@ -104,7 +104,7 @@
         $.ajax({
             type: "get",
             url: "http://localhost:8080/per/selectPermission",
-            data: "TOKEN=" + crm.getToken() + "&page=" + page + "&limit=" + limit,
+            data: "token=" + crm.getToken() + "&page=" + page + "&limit=" + limit,
             datetypr: "json",
             success: function (res) {
                 res = JSON.parse(res);

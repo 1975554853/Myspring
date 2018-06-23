@@ -329,7 +329,7 @@
         $.ajax({
             type: "get",
             url: "http://localhost:8080/yh/selectUsersCondition",
-            data: "TOKEN=" + crm.getToken() + "&loginname=" + loginname + "&islockout=" + islockout + "&starttime=" + starttime + "&endtime=" + endtime + "&sort=" + sort + "&page=" + page + "&limit=" + limit,
+            data: "token=" + crm.getToken() + "&loginname=" + loginname + "&islockout=" + islockout + "&starttime=" + starttime + "&endtime=" + endtime + "&sort=" + sort + "&page=" + page + "&limit=" + limit,
             datetypr: "json",
             success: function (res) {
                 res = JSON.parse(res);
@@ -492,7 +492,7 @@
             $.ajax({
                 type: "get",
                 url: "http://192.168.1.70:8080/yh/lockingUsers",
-                data: "TOKEN=" + crm.getToken() + "&loginname=" + p1,
+                data: "token=" + crm.getToken() + "&loginname=" + p1,
                 success: function (del) {
                     if (JSON.parse(del).code == "100") {
                         alert("锁定成功！")
@@ -514,7 +514,7 @@
             $.ajax({
                 type: "get",
                 url: "http://192.168.1.70:8080/yh/unlockingUsers",
-                data: "TOKEN=" + crm.getToken() + "&loginname=" + p1,
+                data: "token=" + crm.getToken() +  "&loginname=" + p1,
                 success: function (del) {
                     if (JSON.parse(del).code == "100") {
                         alert("解锁成功！")
@@ -536,7 +536,7 @@
             $.ajax({
                 type: "get",
                 url: "http://192.168.1.70:8080/yh/updateUsersPassword",
-                data: "TOKEN=" + crm.getToken() + "&loginname=" + p1,
+                data:"token=" + crm.getToken() +  "&loginname=" + p1,
                 success: function (del) {
                     if (JSON.parse(del).code == "100") {
                         alert("重置密码成功！")
@@ -567,7 +567,7 @@
         $.ajax({
             type: "get",
             url: "http://localhost:8080/yh/selectRoles",
-            data: "TOKEN=" + crm.getToken(),
+            data: "token=" + crm.getToken(),
             datetypr: "json",
             success: function (res) {
                 res = JSON.parse(res).data;
@@ -589,7 +589,7 @@
         $.ajax({
             type: "get",
             url: "http://localhost:8080/yh/selectUserRoles",
-            data: "TOKEN=" + crm.getToken() + "&loginname=" + roleuser,
+            data:"token=" + crm.getToken() + "&loginname=" + roleuser,
             datetypr: "json",
             success: function (res) {
                 res = JSON.parse(res).data;
@@ -641,7 +641,7 @@
         $.ajax({
             type: "get",
             url: "http://localhost:8080/yh/insertUserRole",
-            data: "TOKEN=" + crm.getToken() + "&loginname=" + roleuser + "&rolename=" + role1,
+            data: "token=" + crm.getToken() +  "&loginname=" + roleuser + "&rolename=" + role1,
             datetypr: "json",
             success: function (res) {
                 if (JSON.parse(res).code == 100) {
@@ -662,7 +662,7 @@
         $.ajax({
             type: "get",
             url: "http://localhost:8080/yh/deleteUserRole",
-            data: "TOKEN=" + crm.getToken() + "&loginname=" + roleuser + "&rolename=" + role2,
+            data: "token=" + crm.getToken() +  "&loginname=" + roleuser + "&rolename=" + role2,
             datetypr: "json",
             success: function (res) {
                 if (JSON.parse(res).code == 100) {
@@ -710,7 +710,7 @@
             $.ajax({
                 type: "get",
                 url: "http://192.168.1.70:8080/yh/deleteUsersLoginname",
-                data: "TOKEN=" + crm.getToken() + "&loginname=" + p1,
+                data: "token=" + crm.getToken() +  "&loginname=" + p1,
                 success: function (del) {
                     if (JSON.parse(del).code == "100") {
                         document.getElementById('tab').deleteRow(p);
@@ -741,7 +741,7 @@
         $.ajax({
             type: "get",
             url: "http://localhost:8080/yh/updateUsers",
-            data: "TOKEN=" + crm.getToken() + "&loginname=" + $("#aloginname").val() + "&protectemail=" + $("#aprotectemail").val() + "&protectmtel=" + $("#aprotectmtel").val(),
+            data: "token=" + crm.getToken() + "&loginname=" + $("#aloginname").val() + "&protectemail=" + $("#aprotectemail").val() + "&protectmtel=" + $("#aprotectmtel").val(),
             datetypr: "json",
             success: function (res) {
                 if (JSON.parse(res).code == 100) {
@@ -783,7 +783,7 @@
         $.ajax({
             type: "get",
             url: "http://localhost:8080/yh/insertUsers",
-            data: "TOKEN=" + crm.getToken() + "&loginname=" + $("#bloginname").val() + "&password=" + $("#bpassword").val() + "&protectemail=" + $("#aprotectemail").val() + "&protectmtel=" + $("#aprotectmtel").val(),
+            data:"token=" + crm.getToken() + "&loginname=" + $("#bloginname").val() + "&password=" + $("#bpassword").val() + "&protectemail=" + $("#aprotectemail").val() + "&protectmtel=" + $("#aprotectmtel").val(),
             datetypr: "json",
             success: function (res) {
                 if (JSON.parse(res).code == 100) {
