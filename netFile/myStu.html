@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../js/layui/css/layui.css">
+    <script src="../js/layui/layui.js"></script>
+    <script src="../js/jQuery-3.2.1.js"></script>
+    <script src="../js/we.js"></script>
+
+
+    <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+</head>
+<body>
+
+<div class="demoTable">
+    搜索姓名：
+    <div class="layui-inline">
+        <input class="layui-input" name="name" id="name" autocomplete="off">
+    </div>
+    搜索电话：
+    <div class="layui-inline">
+        <input class="layui-input" name="name" id="phone" autocomplete="off">
+    </div>
+    搜索咨询师：
+    <div class="layui-inline">
+        <input class="layui-input" name="name" id="zixunshi" autocomplete="off">
+    </div>
+    <button class="layui-btn" data-type="reload">搜索</button>
+</div>
+id: <input type="text" placeholder="请输入"  id="id1">
+</form>
+<button  id="deleteStudent">删除</button>
+<table class="layui-hide" id="LAY_table_user" lay-filter="user"></table>
+
+
+
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+    var token = crm.getToken();
+    layui.use('table', function(){
+        var table = layui.table;
+
+        //方法级渲染
+        table.render({
+            elem: '#LAY_table_user'
+            ,url: 'http://localhost:8080/student/select?token='+token
+            ,cols: [[
+                {checkbox: true, fixed: true}
+                ,{field:'id', title: 'ID', width:80, sort: true, fixed: true}
+                ,{field:'name', title: '用户名', width:80}
+                ,{field:'sex', title: '性别', width:80, sort: true}
+                ,{field:'age', title: '城市', width:80}
+                ,{field:'phone', title: '签名'}
+                ,{field:'stustatus', title: '积分', sort: true, width:80}
+                ,{field:'perstate', title: '评分', sort: true, width:80}
+                ,{field:'msgsource', title: '职业', width:80}
+                ,{field:'sourceurl', title: '财富', sort: true, width:135}
+                ,{field:'sourcekeyword', title: '积分', sort: true, width:80}
+                ,{field:'address', title: '评分', sort: true, width:80}
+                ,{field:'netpusherid', title: '职业', width:80}
+                ,{field:'askerid', title: '财富', sort: true, width:135}
+                ,{field:'qq', title: '财富', sort: true, width:135}
+                ,{field:'weixin', title: '积分', sort: true, width:80}
+                ,{field:'content', title: '评分', sort: true, width:80}
+                ,{field:'createtime', title: '职业', width:80}
+                ,{field:'learnforward', title: '财富', sort: true, width:135}
+                ,{field:'isvalid', title: '财富', sort: true, width:135}
+                ,{field:'record', title: '积分', sort: true, width:80}
+                ,{field:'isreturnvist', title: '评分', sort: true, width:80}
+                ,{field:'firstvisittime', title: '职业', width:80}
+                ,{field:'ishome', title: '财富', sort: true, width:135}
+                ,{field:'hometime', title: '积分', sort: true, width:80}
+                ,{field:'lostvalid', title: '评分', sort: true, width:80}
+                ,{field:'ispay', title: '职业', width:80}
+                ,{field:'paytime', title: '财富', sort: true, width:135}
+                ,{field:'money', title: '财富', sort: true, width:135}
+                ,{field:'isreturnmoney', title: '积分', sort: true, width:80}
+                ,{field:'isinclass', title: '评分', sort: true, width:80}
+                ,{field:'inclasstime', title: '职业', width:80}
+                ,{field:'inclasscontent', title: '财富', sort: true, width:135}
+                ,{field:'askercontent', title: '积分', sort: true, width:80}
+                ,{field:'isdel', title: '评分', sort: true, width:80}
+                ,{field:'frompart', title: '职业', width:80}
+                ,{field:'stuconcern', title: '财富', sort: true, width:135}
+                ,{field:'isbaobei', title: '积分', sort: true, width:80}
+                ,{field:'zixunname', title: '评分', sort: true, width:80}
+                ,{field:'createuser', title: '职业', width:80}
+                ,{field:'returnmoneyreason', title: '财富', sort: true, width:135}
+                ,{field:'premoney', title: '职业', width:80}
+                ,{field:'premoneytime', title: '财富', sort: true, width:135}
+            ]]
+            ,id: 'testReload'
+            ,page: true
+            ,height: 315
+        });
+
+        var $ = layui.$, active = {
+            reload: function(){
+                var demoReload = $('#demoReload');
+
+                //执行重载
+                table.reload('testReload', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    ,where: {
+                        "name": $("#name").val(),
+                        "phone":$("#phone").val(),
+                        "askUser":$("#zixunshi").val()
+
+                    }
+                });
+            }
+        };
+
+        $('.demoTable .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+</script>
+<script>
+    $("#deleteStudent").click(function () {
+        var id123=$("#id1").val();
+
+        $.ajax({
+            type:'get',
+            data:{id:id123},
+            dataType:"json",
+            url:"http://localhost:8080/xsxx/deleteStudent",
+            success:function (res) {
+                console.log("sadf");
+                window.location.href="myStu.html";
+            }
+        })
+
+    })
+</script>
+</body>
+</html>
